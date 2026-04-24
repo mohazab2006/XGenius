@@ -1,5 +1,7 @@
 # 🧠⚽ XGenius: World Cup Prediction & Simulation Engine
 
+**Documentation** (phases, goals, audits, expectations): [docs/README.md](docs/README.md)
+
 ## 📌 Overview
 
 **XGenius** is an AI-powered football analytics platform focused on predicting match outcomes and simulating the FIFA World Cup. By combining expected goals (xG), machine learning models, and probabilistic simulation, the system delivers data-driven insights into match results, team performance, and tournament outcomes.
@@ -62,6 +64,37 @@ Generates human-readable explanations highlighting the key factors influencing e
 - **Frontend**: Next.js, Tailwind CSS
 - **Database**: PostgreSQL
 - **Deployment**: Docker
+
+## Run the API (Phase 2)
+
+From the `backend` folder, install dependencies, train or rely on local artifacts, then start the server:
+
+```bash
+cd backend
+pip install -r requirements.txt
+python -m app.models.train
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+- Docs: [http://localhost:8000/docs](http://localhost:8000/docs)
+- `GET /predict-match?team_a=France&team_b=Brazil`
+- `GET /simulate-tournament?n_simulations=10000`
+- `GET /team-probabilities?n_simulations=10000` (same sim engine, slimmer JSON)
+
+`random_seed` defaults to `42` for repeatability; use a negative value for a random seed (non-reproducible run).
+
+## Docker (Phase 3)
+
+From the **repository root** (where `docker-compose.yml` lives):
+
+```bash
+docker compose up --build
+```
+
+- API: [http://localhost:8000](http://localhost:8000)  
+- OpenAPI: [http://localhost:8000/docs](http://localhost:8000/docs)
+
+The image builds from [docker/Dockerfile](docker/Dockerfile) with the `backend` tree as the app. On first start, the service may run **for up to a couple of minutes** while the ML layer trains and writes `artifacts` under `/app/artifacts` inside the container. A health check allows extra startup time. For development with live reload, keep using the local `uvicorn` command above; Docker targets a consistent deployable run.
 
 ## 📊 Example Output
 

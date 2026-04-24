@@ -1,0 +1,31 @@
+# Git
+.git
+.gitignore
+
+# Python
+.venv
+venv
+**/__pycache__
+**/*.py[cod]
+**/*.pyd
+.mypy_cache
+.pytest_cache
+*.egg-info
+dist
+build
+
+# XGenius — rebuilt inside container; keeps image smaller
+backend/artifacts
+backend/data/mock_matches.csv
+
+# Frontend (not used by API image; Phase 4+)
+frontend/node_modules
+**/.next
+
+# IDE / local
+.vscode
+.idea
+*.log
+
+# Docs (optional; harmless to copy but skip for smaller context)
+# docs

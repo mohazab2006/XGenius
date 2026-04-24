@@ -6,10 +6,7 @@ import pandas as pd
 
 from app.config import FEATURE_COLUMNS_PATH, GOALS_MODEL_PATH, OUTCOME_MODEL_PATH, TEAM_STATS_PATH
 from app.models.train import train_and_save_models
-from app.utils.features import build_match_features, build_team_lookup
-
-
-RESULT_ORDER = ["team_a_win", "draw", "team_b_win"]
+from app.utils.features import MatchFeatures, build_match_features, build_team_lookup
 
 
 class PredictionService:
@@ -26,31 +23,49 @@ class PredictionService:
         self.team_df = pd.read_csv(TEAM_STATS_PATH)
         self.team_lookup = build_team_lookup(self.team_df)
 
-    def predict_match(self, team_a: str, team_b: str) -> dict:
+    def _probs_xg(
+        self, team_a: str, team_b: str
+    ) -> tuple[dict[str, float], float, float, MatchFeatures]:
+        """Raw outcome probabilities and xG for the ordered pair ( team_a, team_b )."""
         feats = build_match_features(team_a, team_b, self.team_lookup)
-        X = pd.DataFrame([feats.to_dict()])[self.feature_columns]
+        x_row = pd.DataFrame([feats.to_dict()])[self.feature_columns]
 
-        class_probs = self.outcome_model.predict_proba(X)[0]
+        class_probs = self.outcome_model.predict_proba(x_row)[0]
         labels = list(self.outcome_model.classes_)
-        prob_map = {label: float(prob) for label, prob in zip(labels, class_probs)}
+        prob_map = {label: float(p) for label, p in zip(labels, class_probs)}
 
-        ordered_probs = {
-            "team_a_win": round(prob_map.get("team_a_win", 0.0), 4),
-            "draw": round(prob_map.get("draw", 0.0), 4),
-            "team_b_win": round(prob_map.get("team_b_win", 0.0), 4),
+        ordered = {
+            "team_a_win": float(prob_map.get("team_a_win", 0.0)),
+            "draw": float(prob_map.get("draw", 0.0)),
+            "team_b_win": float(prob_map.get("team_b_win", 0.0)),
         }
+        xg_a = float(np.clip(self.goals_model_a.predict(x_row)[0], 0.1, 5.0))
+        xg_b = float(np.clip(self.goals_model_b.predict(x_row)[0], 0.1, 5.0))
+        return ordered, xg_a, xg_b, feats
 
-        xg_a = float(np.clip(self.goals_model_a.predict(X)[0], 0.1, 5.0))
-        xg_b = float(np.clip(self.goals_model_b.predict(X)[0], 0.1, 5.0))
-
+    def predict_match(self, team_a: str, team_b: str) -> dict:
+        ordered_probs, xg_a, xg_b, feats = self._probs_xg(team_a, team_b)
+        display_probs = {
+            "team_a_win": round(ordered_probs["team_a_win"], 4),
+            "draw": round(ordered_probs["draw"], 4),
+            "team_b_win": round(ordered_probs["team_b_win"], 4),
+        }
         explanation = self._explain(feats)
         return {
             "team_a": team_a,
             "team_b": team_b,
-            "probabilities": ordered_probs,
+            "probabilities": display_probs,
             "expected_goals": {"team_a_xg": round(xg_a, 2), "team_b_xg": round(xg_b, 2)},
             "explanation": explanation,
         }
+
+    def get_ordered_outcome_tuple(self, first: str, second: str) -> tuple[float, float, float]:
+        """( P(first wins), P(draw), P(second wins) ) for a scheduled fixture (first, second)."""
+        probs, _, _, _ = self._probs_xg(first, second)
+        return (probs["team_a_win"], probs["draw"], probs["team_b_win"])
+
+    def list_team_names(self) -> list[str]:
+        return sorted(self.team_df["team_name"].astype(str).tolist())
 
     def _explain(self, feats) -> str:
         reasons: list[str] = []
