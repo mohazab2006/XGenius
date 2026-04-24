@@ -1,0 +1,15 @@
+# Python caches
+__pycache__/
+*.py[cod]
+
+# Local environments
+.venv/
+venv/
+
+# Build/test artifacts
+.pytest_cache/
+.mypy_cache/
+
+# XGenius generated outputs
+backend/artifacts/
+backend/data/mock_matches.csv
