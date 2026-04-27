@@ -83,6 +83,20 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 `random_seed` defaults to `42` for repeatability; use a negative value for a random seed (non-reproducible run).
 
+## Run the Frontend (Phase 4)
+
+The Next.js + Tailwind UI lives in `frontend/` and talks to the FastAPI server. Start the API first (locally or via Docker), then:
+
+```bash
+cd frontend
+cp .env.local.example .env.local   # set NEXT_PUBLIC_API_URL if not localhost:8000
+npm install
+npm run dev
+```
+
+- App: [http://localhost:3000](http://localhost:3000)
+- Pages: `/` dashboard · `/match` head-to-head prediction · `/tournament` Monte Carlo simulation
+
 ## Docker (Phase 3)
 
 From the **repository root** (where `docker-compose.yml` lives):

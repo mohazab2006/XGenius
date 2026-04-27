@@ -1,14 +1,14 @@
 # Phases and status
 
-> **Current phase:** **Phase 3 — complete**  
-> **Next phase:** **Phase 4** — Frontend (Next.js + Tailwind)
+> **Current phase:** **Phase 4 — complete**  
+> **Next phase:** **Phase 5** — Hardening (optional / ongoing)
 
 | Phase | Scope | Status |
 |-------|--------|--------|
 | **1** | Backend ML foundation: data + features + train outcome + two Poisson xG + prediction service + explain strings | **Done** |
 | **2** | FastAPI: `GET /predict-match`, `GET /simulate-tournament`, `GET /team-probabilities`; Monte Carlo engine (World Cup), JSON contracts | **Done** |
 | **3** | Docker: [docker/Dockerfile](docker/Dockerfile), [docker-compose.yml](docker-compose.yml) at repo root, `.dockerignore` | **Done** |
-| **4** | Frontend (Next.js + Tailwind last): pages for dashboard, match, tournament; charts as feasible | **Not started** |
+| **4** | Frontend (Next.js + Tailwind): dashboard, match prediction, tournament simulation pages wired to live API | **Done** |
 | **5** | Hardening: tests, error handling, README “run locally” for full stack, small perf notes for sims | **Optional / ongoing** |
 
 ## Phase 1 (done) — deliverables
@@ -33,7 +33,10 @@
 
 ## Phase 4 — must deliver
 
-- [ ] Next.js + Tailwind UI wired to the API
-- [ ] No placeholder pages that skip real data
+- [x] Next.js 14 + Tailwind app under `frontend/`
+- [x] Dashboard with live API preview (top contenders), groups, pipeline overview
+- [x] `/match` page: team-vs-team selector → win/draw/loss bars + per-side xG + explanation
+- [x] `/tournament` page: configurable `n_simulations` + seed → top contenders + sortable per-team probability table with heat shading
+- [x] No placeholder pages that skip real data — every result panel is wired to a real endpoint
 
 **Rule:** Phases 2 and 3 can overlap slightly, but **frontend is last** per project agreement.

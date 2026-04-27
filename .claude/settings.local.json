@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python scripts/search.py \"sports tournament football championship premium editorial\" --design-system -p \"XGenius\" -f markdown)",
+      "Bash(python scripts/search.py \"sports tournament football championship premium editorial broadcast\" --design-system -p \"XGenius\" -f markdown)"
+    ]
+  }
+}
