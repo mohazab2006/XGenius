@@ -1,141 +1,44 @@
-# 🧠⚽ XGenius: World Cup Prediction & Simulation Engine
+# 🧠⚽ XGenius — AI World Cup Prediction Engine  
 
-**Documentation** (phases, goals, audits, expectations): [docs/README.md](docs/README.md)
+**XGenius** is a full-stack AI system that predicts football match outcomes and simulates entire tournaments using machine learning, expected goals (xG), and Monte Carlo simulations.
 
-## 📌 Overview
+---
 
-**XGenius** is an AI-powered football analytics platform focused on predicting match outcomes and simulating the FIFA World Cup. By combining expected goals (xG), machine learning models, and probabilistic simulation, the system delivers data-driven insights into match results, team performance, and tournament outcomes.
+## ⚡ What It Does
 
-## 🎯 Objective
+- Predicts match outcomes (win/draw/loss probabilities)
+- Estimates realistic scorelines using xG modeling
+- Simulates full World Cup tournaments (10,000+ runs)
+- Calculates each team's probability of advancing and winning
 
-The main goal of XGenius is to build a **robust World Cup prediction engine** that can:
+---
 
-- Forecast match outcomes (win/draw/loss probabilities)
-- Estimate expected goals (xG) for each team
-- Simulate the full World Cup tournament thousands of times
-- Calculate each team's probability of advancing and winning
-- Provide clear, explainable insights behind predictions
+## 🧠 How It Works
 
-## 🧠 Core Features
+- **ML Models** → Predict match results from team stats, form, and rankings  
+- **xG Modeling** → Uses Poisson-based methods to estimate goals  
+- **Simulation Engine** → Runs large-scale Monte Carlo tournament simulations  
+- **Explainability Layer** → Breaks down *why* predictions are made  
 
-### ⚽ Match Outcome Prediction
-
-Uses machine learning models to predict the probability of each possible result (win, draw, loss) based on team strength, recent form, and historical data.
-
-### 📊 Expected Goals Modeling
-
-Applies statistical techniques (e.g., Poisson regression) to estimate how many goals each team is likely to score in a match.
-
-### 🔁 Tournament Simulation
-
-Implements Monte Carlo simulation to model the entire World Cup:
-
-- Simulates group stages and knockout rounds
-- Runs thousands of tournament scenarios
-- Outputs probabilities for each team's progression and overall victory
-
-### 📈 Team Performance Analysis
-
-Incorporates advanced features such as:
-
-- xG (expected goals) and xG differential
-- Elo or ranking-based team strength
-- Recent match form and consistency
-- Offensive and defensive efficiency
-
-### 🧠 Explainable Insights
-
-Generates human-readable explanations highlighting the key factors influencing each prediction, improving transparency and understanding.
-
-## 🧱 System Architecture
-
-- **Data Layer**: Collects and processes historical match data, team statistics, and performance metrics
-- **Model Layer**:
-  - Classification models for match outcomes
-  - Statistical models for goal prediction
-  - Ensemble techniques for improved accuracy
-- **Simulation Engine**: Runs large-scale probabilistic simulations of tournament outcomes
-- **Visualization Layer**: Displays predictions, probabilities, and tournament brackets through an interactive interface
+---
 
 ## 🛠️ Tech Stack
 
-- **Machine Learning**: Python, Pandas, NumPy, Scikit-learn, XGBoost
-- **Backend API**: FastAPI
-- **Frontend**: Next.js, Tailwind CSS
-- **Database**: PostgreSQL
-- **Deployment**: Docker
+- **Backend**: Python, FastAPI, Scikit-learn, XGBoost  
+- **Data**: Pandas, NumPy  
+- **Frontend**: Next.js, Tailwind CSS  
+- **Database**: PostgreSQL  
+- **Deployment**: Docker  
 
-## Run the API (Phase 2)
+---
 
-From the `backend` folder, install dependencies, train or rely on local artifacts, then start the server:
+## 🚀 Why It’s Cool
 
-```bash
-cd backend
-pip install -r requirements.txt
-python -m app.models.train
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
+- Combines **machine learning + probability + real-world sports data**
+- Simulates entire tournaments, not just single matches
+- Produces **explainable predictions**, not black-box outputs
+- End-to-end system: data → models → simulation → UI
 
-- Docs: [http://localhost:8000/docs](http://localhost:8000/docs)
-- `GET /predict-match?team_a=France&team_b=Brazil`
-- `GET /simulate-tournament?n_simulations=10000`
-- `GET /team-probabilities?n_simulations=10000` (same sim engine, slimmer JSON)
+---
 
-`random_seed` defaults to `42` for repeatability; use a negative value for a random seed (non-reproducible run).
-
-## Run the Frontend (Phase 4)
-
-The Next.js + Tailwind UI lives in `frontend/` and talks to the FastAPI server. Start the API first (locally or via Docker), then:
-
-```bash
-cd frontend
-cp .env.local.example .env.local   # set NEXT_PUBLIC_API_URL if not localhost:8000
-npm install
-npm run dev
-```
-
-- App: [http://localhost:3000](http://localhost:3000)
-- Pages: `/` dashboard · `/match` head-to-head prediction · `/tournament` Monte Carlo simulation
-
-## Docker (Phase 3)
-
-From the **repository root** (where `docker-compose.yml` lives):
-
-```bash
-docker compose up --build
-```
-
-- API: [http://localhost:8000](http://localhost:8000)  
-- OpenAPI: [http://localhost:8000/docs](http://localhost:8000/docs)
-
-The image builds from [docker/Dockerfile](docker/Dockerfile) with the `backend` tree as the app. On first start, the service may run **for up to a couple of minutes** while the ML layer trains and writes `artifacts` under `/app/artifacts` inside the container. A health check allows extra startup time. For development with live reload, keep using the local `uvicorn` command above; Docker targets a consistent deployable run.
-
-## 📊 Example Output
-
-- **Match Prediction**  
-  France vs Brazil
-  - France win: 41%
-  - Draw: 27%
-  - Brazil win: 32%
-  - Expected score: 1.6 - 1.4
-
-- **Tournament Simulation (10,000 runs)**
-  - Brazil wins: 18.2%
-  - France wins: 15.7%
-  - Argentina wins: 13.1%
-
-## 🚀 Impact
-
-XGenius demonstrates:
-
-- Real-world application of machine learning in sports analytics
-- Probabilistic modeling and large-scale simulation techniques
-- End-to-end system design from data ingestion to user interface
-- Ability to generate actionable, explainable insights from data
-
-## 🔮 Future Enhancements
-
-- Real-time match updates and live prediction adjustments
-- Player-level performance and injury impact modeling
-- Integration with live betting odds for value detection
-- Expansion to other competitions (Champions League, Euros)
+> Built for data-driven sports analysis, scalable simulations, and real-world ML system design.
